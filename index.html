@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTA VI - Contagem Regressiva Oficial | Vice City</title>
+    <meta name="description" content="Acompanhe a contagem regressiva para a estreia de Grand Theft Auto VI (GTA 6). Veja quantos dias e horas faltam no fuso horário do seu país!">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,800;0,900;1,800;1,900&family=Outfit:wght@300;400;500;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Canvas & Animated Sky -->
+    <div class="sky-background">
+        <div class="gradient-overlay"></div>
+        <div class="stars-layer"></div>
+        <div class="sun-glow"></div>
+        <div class="grid-floor"></div>
+        <canvas id="ambientCanvas"></canvas>
+        <div class="palm-trees-left"></div>
+        <div class="palm-trees-right"></div>
+        <div class="water-reflection"></div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="main-container" id="mainContainer">
+        <!-- Top Navigation / Controls -->
+        <header class="top-bar">
+            <div class="rockstar-logo-badge">
+                <span class="r-star">★</span>
+                <span class="r-text">GAMES</span>
+            </div>
+            
+            <div class="top-controls">
+                <!-- Sound Toggle -->
+                <button id="soundToggleBtn" class="pill-btn sound-btn" title="Ativar/Desativar trilha synthwave atmosférica" aria-label="Som ambiente">
+                    <span class="sound-icon">🔈</span>
+                    <span class="sound-text">Áudio Vice City</span>
+                    <span class="audio-waves hidden">
+                        <span class="wave"></span>
+                        <span class="wave"></span>
+                        <span class="wave"></span>
+                    </span>
+                </button>
+
+                <!-- Share Button -->
+                <button id="shareBtn" class="pill-btn" title="Compartilhar contagem regressiva">
+                    <span>🔗 Compartilhar</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- GTA VI Brand Header -->
+        <section class="brand-hero">
+            <div class="franchise-title">GRAND THEFT AUTO</div>
+            <div class="gta-vi-logo-wrap">
+                <h1 class="roman-vi" data-text="VI">VI</h1>
+                <div class="palm-cutout-overlay"></div>
+            </div>
+            <div class="hero-tagline">
+                <span class="badge-tag">LEONIDA • VICE CITY</span>
+                <p class="hero-subtitle">CONTAGEM REGRESSIVA PARA O LANÇAMENTO GLOBAL</p>
+            </div>
+        </section>
+
+        <!-- Country Selector Section -->
+        <section class="country-selection-card">
+            <div class="selector-header">
+                <div class="selector-title-wrap">
+                    <span class="pin-icon">📍</span>
+                    <div>
+                        <h2>Escolha o seu país</h2>
+                        <p class="selector-desc">O horário de lançamento e a contagem se ajustam ao seu fuso horário local</p>
+                    </div>
+                </div>
+                <button id="autoDetectBtn" class="detect-btn" title="Detectar automaticamente pelo navegador">
+                    <span class="radar-icon">⚡</span> Usar Meu Fuso
+                </button>
+            </div>
+
+            <!-- Custom Dropdown Selector -->
+            <div class="custom-select-wrapper">
+                <div class="select-selected" id="selectTrigger" tabindex="0">
+                    <div class="selected-content">
+                        <span class="flag-icon" id="selectedFlag">🇧🇷</span>
+                        <div class="selected-meta">
+                            <span class="country-name" id="selectedCountryName">Brasil</span>
+                            <span class="tz-badge" id="selectedTzBadge">Brasília (UTC-3)</span>
+                        </div>
+                    </div>
+                    <span class="arrow-indicator">▼</span>
+                </div>
+                
+                <div class="select-dropdown hidden" id="selectDropdown">
+                    <div class="dropdown-search">
+                        <input type="text" id="countrySearch" placeholder="Buscar país ou cidade..." autocomplete="off">
+                    </div>
+                    <ul class="country-list" id="countryList">
+                        <!-- Items rendered by script.js -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Country Info Pill -->
+            <div class="country-info-strip">
+                <div class="info-item">
+                    <span class="info-label">Hora local atual:</span>
+                    <span class="info-value" id="currentCountryTime">--:--:--</span>
+                </div>
+                <div class="info-divider"></div>
+                <div class="info-item">
+                    <span class="info-label">Data estimada:</span>
+                    <span class="info-value highlight-pink" id="countryReleaseDate">19 de Novembro de 2026</span>
+                </div>
+                <div class="info-divider"></div>
+                <div class="info-item">
+                    <span class="info-label">Tipo de liberação:</span>
+                    <span class="info-value" id="releaseModeText">00:00 (Meia-noite Local)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timer Grid Section -->
+        <section class="timer-section" aria-label="Contagem regressiva">
+            <div class="timer-grid">
+                <!-- Days Card -->
+                <div class="timer-card" id="cardDays">
+                    <div class="card-glow"></div>
+                    <div class="timer-number-wrap">
+                        <span class="timer-digit" id="daysValue">000</span>
+                    </div>
+                    <span class="timer-label">DIAS</span>
+                    <div class="card-corner tr"></div>
+                    <div class="card-corner bl"></div>
+                </div>
+
+                <div class="timer-separator">:</div>
+
+                <!-- Hours Card -->
+                <div class="timer-card" id="cardHours">
+                    <div class="card-glow"></div>
+                    <div class="timer-number-wrap">
+                        <span class="timer-digit" id="hoursValue">00</span>
+                    </div>
+                    <span class="timer-label">HORAS</span>
+                    <div class="card-corner tr"></div>
+                    <div class="card-corner bl"></div>
+                </div>
+
+                <div class="timer-separator">:</div>
+
+                <!-- Minutes Card -->
+                <div class="timer-card" id="cardMinutes">
+                    <div class="card-glow"></div>
+                    <div class="timer-number-wrap">
+                        <span class="timer-digit" id="minutesValue">00</span>
+                    </div>
+                    <span class="timer-label">MINUTOS</span>
+                    <div class="card-corner tr"></div>
+                    <div class="card-corner bl"></div>
+                </div>
+
+                <div class="timer-separator">:</div>
+
+                <!-- Seconds Card -->
+                <div class="timer-card highlight-sec" id="cardSeconds">
+                    <div class="card-glow"></div>
+                    <div class="timer-number-wrap">
+                        <span class="timer-digit" id="secondsValue">00</span>
+                    </div>
+                    <span class="timer-label">SEGUNDOS</span>
+                    <div class="card-corner tr"></div>
+                    <div class="card-corner bl"></div>
+                </div>
+            </div>
+
+            <!-- Target Summary Banner -->
+            <div class="release-summary-banner">
+                <span class="status-dot pulsating"></span>
+                <span id="targetStatusMessage">Faltam exatamente <strong>...</strong> para a chegada a Vice City!</span>
+            </div>
+        </section>
+
+        <!-- Features & Details Footer Section -->
+        <section class="details-section">
+            <div class="detail-card">
+                <div class="detail-icon">🌴</div>
+                <h3>Vice City & Além</h3>
+                <p>O maior e mais imersivo mapa já criado na franquia Grand Theft Auto pelo Estado de Leonida.</p>
+            </div>
+            
+            <div class="detail-card">
+                <div class="detail-icon">🎮</div>
+                <h3>Plataformas</h3>
+                <p>Confirmado inicialmente para PlayStation 5 e Xbox Series X|S.</p>
+            </div>
+
+            <div class="detail-card">
+                <div class="detail-icon">⚡</div>
+                <h3>Lúcia & Jason</h3>
+                <p>A primeira protagonista feminina na era moderna da franquia em uma trama de alta voltagem.</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>Criado por fãs para fãs • GTA VI é marca registrada da Rockstar Games / Take-Two Interactive.</p>
+            <div class="footer-links">
+                <span class="version-tag">VERSÃO 1.0 • VICE EDITION</span>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
